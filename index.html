@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Ibra Drop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05070b;--glass:rgba(255,255,255,.035);--line:rgba(255,255,255,.1);--tx:#f2f5f8;--mut:#8b95a3;--mint:#4fe6b4;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;color:var(--tx);font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;-webkit-tap-highlight-color:transparent;
+background:var(--bg) radial-gradient(ellipse 80% 40% at 50% -5%,rgba(130,160,190,.16),transparent 70%)}
+body{background-image:radial-gradient(rgba(255,255,255,.055) 1px,transparent 1px);background-size:22px 22px}
+#app{max-width:600px;margin:0 auto;padding:18px 14px 36px}
+.hd{display:flex;align-items:center;gap:14px;margin-bottom:6px}
+.logo{flex:none;width:64px;height:64px;border-radius:50%;border:1px solid rgba(255,255,255,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 5px rgba(255,255,255,.04),0 0 28px rgba(255,255,255,.14);background:#06080c}
+.logo b{font-size:13px;letter-spacing:.32em;margin-right:-.32em;font-weight:800}
+.logo i{font-style:normal;font-size:6px;letter-spacing:.5em;margin-right:-.5em;color:var(--mut);margin-top:3px}
+h1{font-size:30px;line-height:1.05;margin:0;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:linear-gradient(180deg,#fff 20%,#8e9bb0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.tag{color:var(--mut);font-size:10px;letter-spacing:.28em;text-transform:uppercase;margin:0 0 16px;display:flex;align-items:center;gap:10px}
+.tag:after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.sub{color:var(--mut);font-size:13px;margin:0 0 12px}
+.seg{display:flex;background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:4px;margin-bottom:10px}
+.seg button{flex:1;border:0;background:transparent;color:var(--mut);padding:11px;border-radius:10px;font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-family:inherit}
+.seg button.on,.chip.on{background:#fff;color:#000}
+input{width:100%;background:var(--glass);color:var(--tx);border:1px solid var(--line);border-radius:14px;padding:13px;font-size:14px;margin-bottom:10px;font-family:inherit}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px}
+.chip{flex:none;border:1px solid var(--line);background:var(--glass);color:var(--tx);border-radius:999px;padding:8px 15px;font-size:12px;font-weight:600;font-family:inherit}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card{position:relative;background:var(--glass);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;backdrop-filter:blur(6px)}
+.card:active{border-color:rgba(255,255,255,.35)}
+.num{position:absolute;top:8px;left:8px;z-index:1;width:26px;height:26px;border-radius:50%;background:rgba(5,7,11,.75);border:1px solid var(--line);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.ph{aspect-ratio:1;background:#080b10;display:flex;align-items:center;justify-content:center;color:#2b3340;font-weight:800;letter-spacing:.3em;font-size:12px;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover}
+.info{padding:11px 12px 13px}
+.nm{font-size:13px;font-weight:600;line-height:1.25;min-height:33px}
+.pr{font-size:17px;font-weight:800;margin-top:4px}
+.st{font-size:11px;color:var(--mint);margin-top:4px;display:flex;align-items:center;gap:6px}
+.st:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 8px currentColor}
+.st.no{color:#ff7d7d}
+.msg{color:var(--mut);text-align:center;padding:40px 10px;font-size:14px}
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:22px}
+.feat div{border:1px solid var(--line);background:var(--glass);border-radius:14px;padding:11px 12px;font-size:11px;color:var(--mut);line-height:1.3}
+.feat b{display:block;color:var(--tx);font-size:12px;margin-bottom:2px}
+.goal{text-align:right;color:var(--mut);font-size:9px;letter-spacing:.3em;text-transform:uppercase;margin-top:18px;line-height:1.8}
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(3px);z-index:5}
+#sh{position:absolute;left:0;right:0;bottom:0;max-height:92%;overflow:auto;background:#070a10;border:1px solid var(--line);border-bottom:0;border-radius:24px 24px 0 0;padding:14px 14px 28px;max-width:600px;margin:0 auto}
+.pics{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;margin-bottom:12px}
+.pics .ph{flex:none;width:100%;scroll-snap-align:center;border-radius:16px}
+.row{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.big{font-size:19px;font-weight:800}
+.btn{display:block;text-align:center;background:#fff;color:#000;border:0;border-radius:14px;padding:15px;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;width:100%;margin-top:14px;box-shadow:0 0 24px rgba(255,255,255,.12)}
+.btn.off{background:#1b2028;color:#6d7785;pointer-events:none;box-shadow:none}
+.x{border:1px solid var(--line);background:var(--glass);color:var(--tx);border-radius:50%;width:34px;height:34px;font-size:15px;flex:none}
+.me{margin-left:auto;flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--glass);color:var(--tx);display:flex;align-items:center;justify-content:center}
+.me svg{width:22px;height:22px}
+.ref{border:1px solid rgba(79,230,180,.35);background:linear-gradient(160deg,rgba(79,230,180,.1),rgba(255,255,255,.02));border-radius:20px;padding:16px;margin-top:14px}
+.ref h3{margin:0 0 6px;font-size:16px}
+.ref p{margin:0 0 10px;color:var(--mut);font-size:13px;line-height:1.4}
+.steps{display:grid;gap:8px;margin:12px 0}
+.steps div{display:flex;gap:10px;align-items:center;font-size:13px}
+.steps span{flex:none;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.lnk{background:#0b0f15;border:1px solid var(--line);border-radius:12px;padding:11px;font-size:12px;color:var(--mut);word-break:break-all}
+.btn.g{background:transparent;color:var(--tx);border:1px solid var(--line);box-shadow:none;margin-top:8px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.stats div{border:1px solid var(--line);background:var(--glass);border-radius:14px;padding:12px}
+.stats b{display:block;font-size:20px}.stats small{color:var(--mut);font-size:11px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="hd"><div class="logo"><b>IBRA</b><i>DROP</i></div><h1>Каталог</h1><button class="me" id="me" aria-label="Профиль"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg></button></div>
+  <p class="tag" id="sub"></p>
+  <div class="seg"><button id="mr" class="on">Розница</button><button id="mo">Опт</button></div>
+  <input id="q" type="search" placeholder="Поиск по названию или бренду">
+  <div class="chips" id="chips"></div>
+  <div id="list"><div class="msg">Загрузка…</div></div>
+  <div class="feat"><div><b>Готовые фото</b>и видео для продаж</div><div><b>Актуальные цены</b>поставщика</div><div><b>Широкий ассортимент</b>кроссовок и одежды</div><div><b>Быстрая отправка</b>и поддержка на всех этапах</div></div>
+  <div class="goal">Твой успех —<br>наша цель</div>
+</div>
+<div id="ov"><div id="sh"></div></div>
+<script>
+/* ===== НАСТРОЙКИ ===== */
+const CFG={
+  sheet:'https://docs.google.com/spreadsheets/d/e/2PACX-1vQqElRfOdIStUVlm-1tkVZpCijSjEfxns9sRtiD_K6i-c6tbQiOMj0F01m4B8QUK2XmHiIEystcxFsU/pub?output=csv',   // Файл → Поделиться → Опубликовать в интернете → CSV
+  bot:'dropopt_shop_bot',            // бот для реферальных ссылок
+  refBonus:100,                      // бонус за друга, ₽
+  balanceSheet:'',                   // (необязательно) CSV-ссылка на лист «Баланс»: id, balance, invited
+  contact:'dropopt_shop_bot',        // @username МЕНЕДЖЕРА, куда уходят заказы (без @)
+  cur:'₽',
+  tagline:'Поставщик · Кроссовки · Одежда',
+  optNote:'Оптовый прайс для дропшипперов'
+};
+/* ===================== */
+const tg=window.Telegram&&window.Telegram.WebApp;
+if(tg){try{tg.ready();tg.expand();tg.setHeaderColor('#0a0a0a');tg.setBackgroundColor('#0a0a0a');}catch(e){}}
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let P=[],mode='retail',brand='',query='',cur=null,pick='';
+$('sub').textContent=CFG.tagline;
+
+function csv(t){const r=[];let row=[],c='',q=false;
+  for(let i=0;i<t.length;i++){const ch=t[i];
+    if(q){if(ch=='"'){if(t[i+1]=='"'){c+='"';i++}else q=false}else c+=ch}
+    else if(ch=='"')q=true;
+    else if(ch==','){row.push(c);c=''}
+    else if(ch=='\n'||ch=='\r'){if(ch=='\r'&&t[i+1]=='\n')i++;row.push(c);r.push(row);row=[];c=''}
+    else c+=ch}
+  if(c||row.length){row.push(c);r.push(row)}return r}
+function img(u){u=u.trim();const m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/)||(/drive\.google\.com/.test(u)&&u.match(/[?&]id=([\w-]+)/));
+  return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1000':u}
+function parse(t){const r=csv(t).filter(x=>x.some(v=>v.trim()));if(r.length<2)return[];
+  const h=r[0].map(x=>x.trim().toLowerCase());const g=(row,k)=>(row[h.indexOf(k)]||'').trim();
+  return r.slice(1).map(row=>{const sizes=g(row,'sizes').split(/[,;]/).map(x=>x.trim()).filter(Boolean);
+    const off=/^(нет|no|0|false|-)$/i.test(g(row,'in'));
+    return{name:g(row,'name'),brand:g(row,'brand'),retail:+g(row,'retail').replace(/\s/g,'')||0,opt:+g(row,'opt').replace(/\s/g,'')||0,
+      sizes,ok:sizes.length>0&&!off,photos:g(row,'photo').split(/[|\n ]+/).filter(Boolean).map(img)}}).filter(p=>p.name)}
+const money=n=>Number(n).toLocaleString('ru-RU')+' '+CFG.cur;
+const price=p=>mode==='opt'?p.opt:p.retail;
+
+async function load(){
+  if(CFG.sheet.indexOf('http')!==0){$('list').innerHTML='<div class="msg">Укажите ссылку на таблицу в настройках (CFG.sheet)</div>';return}
+  try{const res=await fetch(CFG.sheet+(CFG.sheet.includes('?')?'&':'?')+'t='+Date.now());
+    if(!res.ok)throw 0;P=parse(await res.text());try{localStorage.setItem('ibra',JSON.stringify(P))}catch(e){}
+  }catch(e){try{P=JSON.parse(localStorage.getItem('ibra')||'[]')}catch(x){P=[]}
+    if(!P.length){$('list').innerHTML='<div class="msg">Не удалось загрузить товары.<br><br><button class="chip on" onclick="load()">Повторить</button></div>';return}}
+  chips();list();
+}
+function chips(){const bs=[...new Set(P.map(p=>p.brand).filter(Boolean))];
+  $('chips').innerHTML=bs.length?['Все',...bs].map(b=>'<button class="chip'+((b==='Все'?'':b)===brand?' on':'')+'" data-b="'+esc(b==='Все'?'':b)+'">'+esc(b)+'</button>').join(''):''}
+function ph(p){return p.photos.length?'<img loading="lazy" src="'+esc(p.photos[0])+'" alt="">':'IBRA DROP'}
+function list(){const q=query.toLowerCase();
+  const L=P.map((p,i)=>[p,i]).filter(([p])=>(!brand||p.brand===brand)&&(!q||(p.name+' '+p.brand).toLowerCase().includes(q)));
+  $('list').innerHTML=L.length?'<div class="grid">'+L.map(([p,i])=>'<div class="card" data-i="'+i+'"><div class="num">'+String(i+1).padStart(2,'0')+'</div><div class="ph">'+ph(p)+'</div><div class="info"><div class="nm">'+esc(p.name)+'</div><div class="pr">'+money(price(p))+'</div><div class="st'+(p.ok?'':' no')+'">'+(p.ok?'В наличии':'Нет в наличии')+'</div></div></div>').join('')+'</div>':'<div class="msg">Ничего не найдено</div>';
+  if(mode==='opt'&&CFG.optNote)$('list').insertAdjacentHTML('afterbegin','<p class="sub">'+esc(CFG.optNote)+'</p>')}
+function open(i){cur=P[i];pick='';sheet();$('ov').style.display='block';document.body.style.overflow='hidden'}
+function close(){$('ov').style.display='none';document.body.style.overflow='';cur=null}
+function sheet(){const p=cur;if(!p)return;
+  const txt='Привет! Мне нужны: '+p.name+(pick?', размер '+pick:'')+'\n'+(mode==='opt'?'Опт':'Розница')+', '+money(price(p));
+  const can=p.ok&&pick;
+  $('sh').innerHTML='<div class="pics">'+(p.photos.length?p.photos.map(u=>'<div class="ph"><img src="'+esc(u)+'" alt=""></div>').join(''):'<div class="ph">IBRA DROP</div>')+'</div>'
+  +'<div class="row"><div><div class="big">'+esc(p.name)+'</div><div class="sub">'+esc(p.brand)+'</div></div><button class="x" id="cl">✕</button></div>'
+  +'<div class="row"><div class="big">'+money(price(p))+'</div><div class="st'+(p.ok?'':' no')+'">'+(p.ok?'В наличии':'Нет в наличии')+'</div></div>'
+  +(p.ok?'<div class="sub" style="margin-top:12px">Размер</div><div class="chips" style="flex-wrap:wrap">'+p.sizes.map(s=>'<button class="chip'+(s===pick?' on':'')+'" data-s="'+esc(s)+'">'+esc(s)+'</button>').join('')+'</div>':'')
+  +'<a class="btn'+(can?'':' off')+'" id="ord" href="https://t.me/'+esc(CFG.contact)+'?text='+encodeURIComponent(txt)+'" data-t="https://t.me/'+esc(CFG.contact)+'?text='+encodeURIComponent(txt)+'" target="_blank" rel="noopener">'+(!p.ok?'Нет в наличии':pick?'Оформить заказ':'Выберите размер')+'</a>'}
+
+$('mr').onclick=()=>{mode='retail';$('mr').className='on';$('mo').className='';list()};
+$('mo').onclick=()=>{mode='opt';$('mo').className='on';$('mr').className='';list()};
+$('q').oninput=e=>{query=e.target.value;list()};
+$('chips').onclick=e=>{const b=e.target.closest('[data-b]');if(b){brand=b.dataset.b;chips();list()}};
+$('list').onclick=e=>{const c=e.target.closest('[data-i]');if(c)open(+c.dataset.i)};
+$('ov').onclick=e=>{if(e.target.id==='ov'||e.target.id==='cl')close();
+  const s=e.target.closest('[data-s]');if(s){pick=s.dataset.s;sheet()}
+  const o=e.target.closest('#ord');if(o&&tg&&tg.openTelegramLink){e.preventDefault();tg.openTelegramLink(o.dataset.t)}};
+
+const U=(tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user)||null;
+const refLink=()=>'https://t.me/'+CFG.bot+'?start=ref_'+(U?U.id:'');
+function profileHTML(bal,inv){
+  const name=U?esc([U.first_name,U.last_name].filter(Boolean).join(' ')):'Гость';
+  return '<div class="row"><div><div class="big">'+name+'</div><div class="sub">'+(U&&U.username?'@'+esc(U.username):'Профиль')+'</div></div><button class="x" id="cl">✕</button></div>'
+  +'<div class="stats"><div><b>'+money(bal)+'</b><small>Бонусный баланс</small></div><div><b>'+inv+'</b><small>Заказали по приглашению</small></div></div>'
+  +'<div class="ref"><h3>Пригласи друга — получи '+money(CFG.refBonus)+'</h3><p>Бонус начисляется после первого заказа друга.</p>'
+  +'<div class="steps"><div><span>1</span>Отправь другу свою ссылку</div><div><span>2</span>Друг открывает бота и делает первый заказ</div><div><span>3</span>Тебе приходит '+money(CFG.refBonus)+'</div></div>'
+  +(U?'<div class="lnk" id="lk">'+esc(refLink())+'</div><a class="btn" id="sr" href="#">Поделиться с другом</a><a class="btn g" id="cp" href="#">Скопировать ссылку</a>':'<div class="msg">Откройте магазин через Telegram, чтобы получить личную ссылку</div>')+'</div>'}
+async function profile(){
+  cur=null;$('sh').innerHTML=profileHTML(0,0);$('ov').style.display='block';document.body.style.overflow='hidden';
+  if(CFG.balanceSheet&&U){try{const r=csv(await(await fetch(CFG.balanceSheet+(CFG.balanceSheet.includes('?')?'&':'?')+'t='+Date.now())).text()).filter(x=>x.some(v=>v.trim()));
+    const h=r[0].map(x=>x.trim().toLowerCase()),row=r.slice(1).find(x=>(x[h.indexOf('id')]||'').trim()===String(U.id));
+    if(row&&$('ov').style.display==='block'&&!cur)$('sh').innerHTML=profileHTML(+(row[h.indexOf('balance')]||'0').replace(/\s/g,'')||0,+(row[h.indexOf('invited')]||'0')||0)}catch(e){}}}
+$('me').onclick=profile;
+$('ov').addEventListener('click',e=>{
+  const sr=e.target.closest('#sr'),cp=e.target.closest('#cp');
+  if(sr){e.preventDefault();const u='https://t.me/share/url?url='+encodeURIComponent(refLink())+'&text='+encodeURIComponent('Заказывай кроссовки в Ibra Drop по моей ссылке');
+    if(tg&&tg.openTelegramLink)tg.openTelegramLink(u);else window.open(u,'_blank')}
+  if(cp){e.preventDefault();const l=refLink(),ok=()=>{cp.textContent='Скопировано ✓'};
+    if(navigator.clipboard)navigator.clipboard.writeText(l).then(ok,ok);else ok()}});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!cur)load()});
+setInterval(()=>{if(!document.hidden&&!cur)load()},60000);
+load();
+</script>
+</body>
+</html>
